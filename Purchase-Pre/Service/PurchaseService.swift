@@ -79,6 +79,14 @@ class PurchaseService: ObservableObject {
                     print("Product: \(product.localizedDescription), price: \(product.priceLocale.currencySymbol ?? "")\(product.price)")
                     
                     let skProduct = product as SKProduct
+                    let productInfo = ProductInfo(
+                        productId: skProduct.productIdentifier,
+                        title: skProduct.localizedTitle,
+                        description: skProduct.localizedDescription,
+                        price: skProduct.price.stringValue,
+                        isPurchased: self.isProductPurchased(skProduct.productIdentifier)
+                    )
+                    products.append(productInfo)
 //                    let productInfo = ProductInfo(
 //                        productId: product.id,
 //                        title: product.displayName,
@@ -104,6 +112,8 @@ class PurchaseService: ObservableObject {
                 
                 switch result {
                 case .success(let purchase):
+                    
+                    print("购买成功: \(purchase.productId)")
                     let productInfo = ProductInfo(
                         productId: purchase.productId,
                         title: self.getProductTitle(for: purchase.productId),
@@ -115,6 +125,7 @@ class PurchaseService: ObservableObject {
                     completion(.success(productInfo))
                     
                 case .error(let error):
+                    print("购买失败: \(error.localizedDescription)")
                     let errorMessage = self.getErrorMessage(for: error)
                     completion(.failure(errorMessage))
                     
