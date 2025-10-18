@@ -2,21 +2,29 @@ PODS:
   - LookinServer (1.2.8):
     - LookinServer/Core (= 1.2.8)
   - LookinServer/Core (1.2.8)
+  - SnapKit (5.7.1)
   - SwiftyBeaver (2.1.1)
+  - SwiftyStoreKit (0.16.1)
 
 DEPENDENCIES:
   - LookinServer
+  - SnapKit
   - SwiftyBeaver
+  - SwiftyStoreKit
 
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
     - LookinServer
+    - SnapKit
     - SwiftyBeaver
+    - SwiftyStoreKit
 
 SPEC CHECKSUMS:
   LookinServer: 1b2b61c6402ae29fa22182d48f5cd067b4e99e80
+  SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SwiftyBeaver: ade157e4f857812e7d7f15f2e3396bb8733f8a1c
+  SwiftyStoreKit: 6b9c08810269f030586dac1fae8e75871a82e84a
 
-PODFILE CHECKSUM: addb13cb2c64b069b79d958bbd8e390c0f1724fa
+PODFILE CHECKSUM: 2abf5228c3a68322ba3e0948f5f80bf54f2c7ca3
 
 COCOAPODS: 1.16.2

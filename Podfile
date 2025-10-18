@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '14.0'
 source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
 
 
@@ -10,7 +10,16 @@ target 'Purchase-Pre' do
   # Pods for Purchase-Pre
   pod 'LookinServer', :configurations => ['Debug']
   pod 'SwiftyBeaver'
-
-
+  pod 'SwiftyStoreKit'
+  pod 'SnapKit'
+  
+  # 设置所有pod的部署目标
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      end
+    end
+  end
 
 end
