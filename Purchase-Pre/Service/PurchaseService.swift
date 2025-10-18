@@ -185,6 +185,107 @@ class PurchaseService: ObservableObject {
         return getPurchasedProducts().contains(productId)
     }
     
+    /// 检查是否购买了指定产品（从苹果服务器验证）
+    func checkProductPurchased(productId: String, completion: @escaping (Bool) -> Void) {
+        SwiftyStoreKit.verifyReceipt(using: AppleReceiptValidator(service: .production, sharedSecret: "")) { result in
+            DispatchQueue.main.async { [weak self] in
+                switch result {
+                case .success(let receipt):
+                    let isPurchased = self?.checkProductInReceipt(receipt: receipt, productId: productId) ?? false
+                    completion(isPurchased)
+                case .error:
+                    // 如果生产环境失败，尝试沙盒环境
+                    self?.checkProductPurchasedSandbox(productId: productId, completion: completion)
+                }
+            }
+        }
+    }
+    
+    /// 检查沙盒环境的购买状态
+    private func checkProductPurchasedSandbox(productId: String, completion: @escaping (Bool) -> Void) {
+        SwiftyStoreKit.verifyReceipt(using: AppleReceiptValidator(service: .sandbox, sharedSecret: "")) { result in
+            DispatchQueue.main.async { [weak self] in
+                switch result {
+                case .success(let receipt):
+                    let isPurchased = self?.checkProductInReceipt(receipt: receipt, productId: productId) ?? false
+                    completion(isPurchased)
+                case .error:
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    /// 检查收据中是否包含指定产品
+    private func checkProductInReceipt(receipt: ReceiptInfo, productId: String) -> Bool {
+        guard let inAppPurchases = receipt["in_app"] as? [[String: Any]] else {
+            return false
+        }
+        
+        for purchase in inAppPurchases {
+            if let productIdInReceipt = purchase["product_id"] as? String,
+               productIdInReceipt == productId {
+                // 检查购买状态
+                if let transactionState = purchase["transaction_state"] as? Int {
+                    // 1 = 购买成功, 2 = 恢复购买
+                    return transactionState == 1 || transactionState == 2
+                }
+            }
+        }
+        return false
+    }
+    
+    /// 获取所有已购买的产品ID（从苹果服务器）
+    func getAllPurchasedProducts(completion: @escaping ([String]) -> Void) {
+        SwiftyStoreKit.verifyReceipt(using: AppleReceiptValidator(service: .production, sharedSecret: "")) { result in
+            DispatchQueue.main.async { [weak self] in
+                switch result {
+                case .success(let receipt):
+                    let purchasedProducts = self?.extractPurchasedProducts(from: receipt) ?? []
+                    completion(purchasedProducts)
+                case .error:
+                    // 如果生产环境失败，尝试沙盒环境
+                    self?.getAllPurchasedProductsSandbox(completion: completion)
+                }
+            }
+        }
+    }
+    
+    /// 从沙盒环境获取已购买产品
+     func getAllPurchasedProductsSandbox(completion: @escaping ([String]) -> Void) {
+        SwiftyStoreKit.verifyReceipt(using: AppleReceiptValidator(service: .sandbox, sharedSecret: "")) { result in
+            DispatchQueue.main.async { [weak self] in
+                switch result {
+                case .success(let receipt):
+                    let purchasedProducts = self?.extractPurchasedProducts(from: receipt) ?? []
+                    completion(purchasedProducts)
+                case .error:
+                    print("无法从沙盒环境获取已购买的产品")
+                    completion([])
+                }
+            }
+        }
+    }
+    
+    /// 从收据中提取已购买的产品ID
+    private func extractPurchasedProducts(from receipt: ReceiptInfo) -> [String] {
+        guard let inAppPurchases = receipt["in_app"] as? [[String: Any]] else {
+            return []
+        }
+        
+        var purchasedProducts: [String] = []
+        for purchase in inAppPurchases {
+            if let productId = purchase["product_id"] as? String,
+               let transactionState = purchase["transaction_state"] as? Int {
+                // 1 = 购买成功, 2 = 恢复购买
+                if transactionState == 1 || transactionState == 2 {
+                    purchasedProducts.append(productId)
+                }
+            }
+        }
+        return purchasedProducts
+    }
+    
     // MARK: - 辅助方法
     
     /// 获取商品标题

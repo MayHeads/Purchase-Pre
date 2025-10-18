@@ -129,6 +129,12 @@ class ViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+        
+//        self.getAllPurchasedProducts()
+        
+        purchaseService.getAllPurchasedProductsSandbox { x in
+            debugPrint("Sandbox 已购买的产品: \(x)")
+        }
     }
     
     // MARK: - Actions
@@ -173,6 +179,22 @@ class ViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "确定", style: .default))
         present(alert, animated: true)
     }
+    
+    /// 检查特定产品是否已购买
+    private func checkSpecificProduct(productId: String) {
+        purchaseService.checkProductPurchased(productId: productId) { [weak self] isPurchased in
+            let message = isPurchased ? "已购买 \(productId)" : "未购买 \(productId)"
+            self?.showAlert(title: "产品购买状态", message: message)
+        }
+    }
+    
+    /// 获取所有已购买的产品
+//    private func getAllPurchasedProducts() {
+//        purchaseService.getAllPurchasedProductsSandbox { [weak self] purchasedProducts in
+//            let message = purchasedProducts.isEmpty ? "没有已购买的产品" : "已购买的产品: \(purchasedProducts.joined(separator: ", "))"
+//            self?.showAlert(title: "购买状态", message: message)
+//        }
+//    }
 }
 
 // MARK: - UITableViewDataSource
