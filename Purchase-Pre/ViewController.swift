@@ -55,7 +55,7 @@ class ViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // 商品ID列表 - 请替换为你在App Store Connect中配置的实际商品ID
-    private let productIds = ["belling_week", "tks"] // 请替换为你的实际商品ID
+    private let productIds = ["jwd.week", "jwd.year"] // 请替换为你的实际商品ID
     
     // MARK: - Lifecycle
     

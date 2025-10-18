@@ -68,11 +68,17 @@ class PurchaseService: ObservableObject {
                let invalidIDs = result.invalidProductIDs
             
                 print("Invalid product IDs: \(invalidIDs)")
+            
+                let count = result.retrievedProducts.count
+            
+            print("Retrieved \(count) products")
                 
                 var products: [ProductInfo] = []
                 for product in result.retrievedProducts {
                     
                     print("Product: \(product.localizedDescription), price: \(product.priceLocale.currencySymbol ?? "")\(product.price)")
+                    
+                    let skProduct = product as SKProduct
 //                    let productInfo = ProductInfo(
 //                        productId: product.id,
 //                        title: product.displayName,
