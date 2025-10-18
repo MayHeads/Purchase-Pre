@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-Purchase-Pre/Pods-Purchase-Pre-frameworks.sh
+${BUILT_PRODUCTS_DIR}/LookinServer/LookinServer.framework
+${BUILT_PRODUCTS_DIR}/SwiftyBeaver/SwiftyBeaver.framework
