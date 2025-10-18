@@ -1,0 +1,60 @@
+/* 
+  Localizable.strings
+  Purchase-Pre
+
+  Created by AI Assistant on 2025-01-18.
+*/
+
+// Main Interface
+"in_app_purchase_title" = "In-App Purchase";
+"purchase_button" = "Purchase";
+"restore_button" = "Restore Purchases";
+"check_purchased_button" = "Check Purchased Products";
+
+// Product Information
+"product_title" = "Product Title";
+"product_description" = "Product Description";
+"product_price" = "Price";
+"product_purchased" = "Purchased";
+
+// Purchase Status
+"purchase_success" = "Purchase Successful";
+"purchase_failed" = "Purchase Failed";
+"purchase_cancelled" = "Purchase Cancelled";
+"restore_success" = "Restore Successful";
+"restore_failed" = "Restore Failed";
+"nothing_to_restore" = "Nothing to Restore";
+
+// Query Results
+"purchased_products_title" = "Purchased Products";
+"no_purchased_products" = "No purchased products";
+"purchased_products_list" = "Purchased products: %@";
+"product_purchase_status" = "Product Purchase Status";
+"product_purchased_status" = "Purchased %@";
+"product_not_purchased_status" = "Not purchased %@";
+
+// Error Messages
+"error_title" = "Error";
+"error_unknown" = "Unknown error, please contact support";
+"error_payment_cancelled" = "Payment cancelled by user";
+"error_payment_invalid" = "Invalid purchase identifier";
+"error_payment_not_allowed" = "Payment not allowed on this device";
+"error_store_product_not_available" = "Product not available in current store";
+"error_network_connection_failed" = "Unable to connect to network";
+"error_fetch_products_failed" = "Failed to fetch product information: %@";
+"error_no_products_found" = "No products found, please check your App Store Connect configuration";
+
+// Loading States
+"loading" = "Loading...";
+"loading_products" = "Loading products...";
+"verifying_receipt" = "Verifying receipt...";
+
+// Buttons and Actions
+"ok_button" = "OK";
+"info_title" = "Information";
+
+// Purchase Related
+"restore_success_count" = "Successfully restored %d products";
+"purchase_success_product" = "Successfully purchased: %@";
+"purchase_deferred" = "Purchase waiting for approval";
+"not_purchased" = "Not purchased";

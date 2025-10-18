@@ -127,23 +127,23 @@ class ProductTableViewCell: UITableViewCell {
         priceLabel.text = product.price
         
         if product.isPurchased {
-            purchaseButton.setTitle("已购买", for: .normal)
+            purchaseButton.setTitle(LocalizationHelper.productPurchased, for: .normal)
             purchaseButton.setTitleColor(.systemGreen, for: .normal)
             purchaseButton.backgroundColor = .systemGreen.withAlphaComponent(0.1)
             purchaseButton.layer.borderColor = UIColor.systemGreen.cgColor
             purchaseButton.isEnabled = false
             
-            statusLabel.text = "已购买"
+            statusLabel.text = LocalizationHelper.productPurchased
             statusLabel.textColor = .white
             statusLabel.backgroundColor = .systemGreen
         } else {
-            purchaseButton.setTitle("购买", for: .normal)
+            purchaseButton.setTitle(LocalizationHelper.purchaseButton, for: .normal)
             purchaseButton.setTitleColor(.systemBlue, for: .normal)
             purchaseButton.backgroundColor = .clear
             purchaseButton.layer.borderColor = UIColor.systemBlue.cgColor
             purchaseButton.isEnabled = true
             
-            statusLabel.text = "未购买"
+            statusLabel.text = LocalizationHelper.localizedString(for: "not_purchased")
             statusLabel.textColor = .white
             statusLabel.backgroundColor = .systemGray
         }

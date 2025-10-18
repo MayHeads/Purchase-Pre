@@ -1,0 +1,60 @@
+/* 
+  Localizable.strings
+  Purchase-Pre
+
+  Created by AI Assistant on 2025-01-18.
+*/
+
+// 主界面
+"in_app_purchase_title" = "内购商品";
+"purchase_button" = "购买";
+"restore_button" = "恢复购买";
+"check_purchased_button" = "查询已购买产品";
+
+// 商品信息
+"product_title" = "商品标题";
+"product_description" = "商品描述";
+"product_price" = "价格";
+"product_purchased" = "已购买";
+
+// 购买状态
+"purchase_success" = "购买成功";
+"purchase_failed" = "购买失败";
+"purchase_cancelled" = "购买已取消";
+"restore_success" = "恢复购买成功";
+"restore_failed" = "恢复购买失败";
+"nothing_to_restore" = "没有可恢复的购买";
+
+// 查询结果
+"purchased_products_title" = "已购买产品";
+"no_purchased_products" = "没有已购买的产品";
+"purchased_products_list" = "已购买的产品: %@";
+"product_purchase_status" = "产品购买状态";
+"product_purchased_status" = "已购买 %@";
+"product_not_purchased_status" = "未购买 %@";
+
+// 错误信息
+"error_title" = "错误";
+"error_unknown" = "未知错误，请联系客服";
+"error_payment_cancelled" = "用户取消支付";
+"error_payment_invalid" = "购买标识符无效";
+"error_payment_not_allowed" = "设备不允许进行支付";
+"error_store_product_not_available" = "商品在当前商店不可用";
+"error_network_connection_failed" = "无法连接到网络";
+"error_fetch_products_failed" = "获取商品信息失败: %@";
+"error_no_products_found" = "没有找到任何商品，请检查App Store Connect中的产品配置";
+
+// 加载状态
+"loading" = "加载中...";
+"loading_products" = "正在加载商品...";
+"verifying_receipt" = "正在验证收据...";
+
+// 按钮和操作
+"ok_button" = "确定";
+"info_title" = "提示";
+
+// 购买相关
+"restore_success_count" = "成功恢复 %d 个商品";
+"purchase_success_product" = "成功购买: %@";
+"purchase_deferred" = "购买等待批准";
+"not_purchased" = "未购买";

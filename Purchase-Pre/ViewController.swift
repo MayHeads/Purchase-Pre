@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "内购商品"
+        label.text = LocalizationHelper.inAppPurchaseTitle
         label.font = UIFont.boldSystemFont(ofSize: 24)
         label.textAlignment = .center
         label.textColor = .label
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     
     private lazy var restoreButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("恢复购买", for: .normal)
+        button.setTitle(LocalizationHelper.restoreButton, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.setTitleColor(.systemBlue, for: .normal)
         button.backgroundColor = .systemGray6
@@ -47,6 +47,17 @@ class ViewController: UIViewController {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.hidesWhenStopped = true
         return indicator
+    }()
+    
+    private lazy var checkPurchasedButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(LocalizationHelper.checkPurchasedButton, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.backgroundColor = .systemGray6
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(checkPurchasedButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     // MARK: - Properties
@@ -74,6 +85,7 @@ class ViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(tableView)
         view.addSubview(restoreButton)
+        view.addSubview(checkPurchasedButton)
         view.addSubview(loadingIndicator)
         
         titleLabel.snp.makeConstraints { make in
@@ -85,10 +97,16 @@ class ViewController: UIViewController {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(restoreButton.snp.top).offset(-20)
+            make.bottom.equalTo(checkPurchasedButton.snp.top).offset(-20)
         }
         
         restoreButton.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.equalTo(checkPurchasedButton.snp.top).offset(-10)
+            make.height.equalTo(50)
+        }
+        
+        checkPurchasedButton.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(16)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
             make.height.equalTo(50)
@@ -125,7 +143,7 @@ class ViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
                 if let errorMessage = errorMessage {
-                    self?.showAlert(title: "错误", message: errorMessage)
+                    self?.showAlert(title: LocalizationHelper.errorTitle, message: errorMessage)
                 }
             }
             .store(in: &cancellables)
@@ -147,12 +165,12 @@ class ViewController: UIViewController {
         purchaseService.restorePurchases { [weak self] result in
             switch result {
             case .success(let products):
-                let message = "成功恢复 \(products.count) 个商品"
-                self?.showAlert(title: "恢复成功", message: message)
+                let message = LocalizationHelper.localizedString(for: "restore_success_count", arguments: products.count)
+                self?.showAlert(title: LocalizationHelper.restoreSuccess, message: message)
             case .failure(let error):
-                self?.showAlert(title: "恢复失败", message: error)
+                self?.showAlert(title: LocalizationHelper.restoreFailed, message: error)
             case .nothingToRestore:
-                self?.showAlert(title: "提示", message: "没有可恢复的购买")
+                self?.showAlert(title: LocalizationHelper.nothingToRestore, message: LocalizationHelper.nothingToRestore)
             }
         }
     }
@@ -161,30 +179,38 @@ class ViewController: UIViewController {
         purchaseService.purchaseProduct(productId: product.productId) { [weak self] result in
             switch result {
             case .success(let productInfo):
-                let message = "成功购买: \(productInfo.title)"
-                self?.showAlert(title: "购买成功", message: message)
+                let message = LocalizationHelper.localizedString(for: "purchase_success_product", arguments: productInfo.title)
+                self?.showAlert(title: LocalizationHelper.purchaseSuccess, message: message)
                 self?.tableView.reloadData()
             case .failure(let error):
-                self?.showAlert(title: "购买失败", message: error)
+                self?.showAlert(title: LocalizationHelper.purchaseFailed, message: error)
             case .cancelled:
-                self?.showAlert(title: "提示", message: "用户取消购买")
+                self?.showAlert(title: LocalizationHelper.purchaseCancelled, message: LocalizationHelper.purchaseCancelled)
             case .deferred:
-                self?.showAlert(title: "提示", message: "购买等待批准")
+                let message = LocalizationHelper.localizedString(for: "purchase_deferred")
+                self?.showAlert(title: LocalizationHelper.localizedString(for: "info_title"), message: message)
             }
         }
     }
     
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .default))
+        alert.addAction(UIAlertAction(title: LocalizationHelper.localizedString(for: "ok_button"), style: .default))
         present(alert, animated: true)
+    }
+    
+    @objc private func checkPurchasedButtonTapped() {
+        purchaseService.getAllPurchasedProductsSandbox { [weak self] purchasedProducts in
+            let message = purchasedProducts.isEmpty ? LocalizationHelper.noPurchasedProducts : LocalizationHelper.purchasedProductsList(purchasedProducts.joined(separator: ", "))
+            self?.showAlert(title: LocalizationHelper.purchasedProductsTitle, message: message)
+        }
     }
     
     /// 检查特定产品是否已购买
     private func checkSpecificProduct(productId: String) {
         purchaseService.checkProductPurchased(productId: productId) { [weak self] isPurchased in
-            let message = isPurchased ? "已购买 \(productId)" : "未购买 \(productId)"
-            self?.showAlert(title: "产品购买状态", message: message)
+            let message = isPurchased ? LocalizationHelper.productPurchasedStatus(productId) : LocalizationHelper.productNotPurchasedStatus(productId)
+            self?.showAlert(title: LocalizationHelper.productPurchaseStatus, message: message)
         }
     }
     
